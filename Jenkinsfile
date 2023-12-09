@@ -46,7 +46,7 @@ pipeline {
                 scannerHome = tool 'mysonarscanner4'
             }
             steps {
-                withSonarQubeEnv('sonar-pro') {
+                withSonarQubeEnv('sonar') {
                     sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=vprofile \
                     -Dsonar.projectName=vprofile-repo \
                     -Dsonar.projectVersion=1.0 \
@@ -88,9 +88,9 @@ pipeline {
         }
 
         stage('Kubernetes Deploy') {
-            agent {label 'Kops-Server'}
+            agent {label 'KOPS'}
             steps {
-                sh "helm upgrade --install --force vprofile-stack helm/vprofilecharts --set appimage=${registry}:V${BUILD-NUMBER} --namespace prod"
+                sh "helm upgrade --install --force vprofile-stack helm/vprofilecharts --set appimage=${registry}:V${BUILD_NUMBER} --namespace prod"
             }
         }
     }
